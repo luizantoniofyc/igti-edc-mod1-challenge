@@ -2,7 +2,7 @@ import boto3
 
 def handler(event, context):
     """
-    Lambda function that starts a job flow in EMR for data ingestion and transformation.
+    Lambda function that starts a job flow in EMR for data ingestion and transformation. 
     """
     client = boto3.client('emr', region_name='us-east-1')
 
