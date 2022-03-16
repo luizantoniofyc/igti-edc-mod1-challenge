@@ -104,6 +104,7 @@ def handler(event, context):
                     }
                 }],
             )
+            
     return {
         'statusCode': 200,
         'body': f"Started job flow {cluster_id['JobFlowId']}"
