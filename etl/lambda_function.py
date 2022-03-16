@@ -50,7 +50,7 @@ def handler(event, context):
                     {
                         'Name': 'Installation of required python packages',
                         'ScriptBootstrapAction': {
-                            'Path': 's3://datalake-luizantoniolima-igti-challenge/emr-code/pyspark/build_lambda_package.sh',
+                            'Path': 's3://datalake-luizantoniolima-igti-challenge/emr-code/build_lambda_package.sh',
                         }
                     },
                 ],
@@ -104,7 +104,7 @@ def handler(event, context):
                     }
                 }],
             )
-            
+
     return {
         'statusCode': 200,
         'body': f"Started job flow {cluster_id['JobFlowId']}"
