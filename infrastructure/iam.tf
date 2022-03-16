@@ -12,6 +12,14 @@ resource "aws_iam_role" "lambda" {
     },
     "Effect": "Allow",
     "Sid": "AssumeRole"
+    },
+    {
+    "Action": "iam:PassRole",
+    "Principal": {
+        "Service": "lambda.amazonaws.com"
+    },
+    "Effect": "Allow",
+    "Sid": "PassRole"
     }
 ]
 }
