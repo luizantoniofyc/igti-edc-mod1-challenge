@@ -1,8 +1,14 @@
 from urllib.request import urlretrieve
 import py7zr
 import os
+import logging
 from pyspark.sql import functions as f
 from pyspark.sql import SparkSession
+
+# Configuracao de logs de aplicacao
+logging.basicConfig(stream=sys.stdout)
+logger = logging.getLogger('datalake_rais_ingestion')
+logger.setLevel(logging.DEBUG)
 
 basepath = "./opt/ml/processing/output"
 dlpath = f"{basepath}/rais"
@@ -25,6 +31,7 @@ urls = [
     "ftp://ftp.mtps.gov.br/pdet/microdados/RAIS/2020/RAIS_VINC_PUB_SP.7z",
 ]
 
+logger.info("Creating spark session...")
 spark = (
     SparkSession.builder.appName("ChallengeSpark")
     .getOrCreate()
@@ -33,7 +40,7 @@ spark = (
 def obter_dados(url, name):
     filename = dlpath + '/' + name
     urlretrieve(url, filename=filename)
-    print(filename)
+    logger.info(f"Extracting: {filename}")
     archive = py7zr.SevenZipFile(filename)
     archive.extractall(path=dlpath)
     archive.close()
@@ -44,6 +51,7 @@ def obter_dados(url, name):
 
 def transformar_dados(filename):
     # Ler os dados da rais
+    logger.info("Reading data from rais...")
     rais = (
         spark
         .read
@@ -56,6 +64,7 @@ def transformar_dados(filename):
         # .load("s3://datalake-luizantoniolima-igti-challenge/raw-data/rais/")
     )
     # Escrever dados da rais em parquet
+    logger.info("Writing rais data as parquet...")
     (
         rais
         .write
@@ -69,8 +78,8 @@ if __name__ == "__main__":
     os.makedirs(dlpath, exist_ok=True)
 
     for i in range(len(urls)):
-        print(f"Extracting from {urls[i]}")
+        logger.info(f"Extracting from {urls[i]}")
         res = obter_dados(urls[i], names[i])
-        print(res)
+        logger.info(res)
     
-    print("Done!")
+    logger.info("DONE")
