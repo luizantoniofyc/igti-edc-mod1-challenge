@@ -45,6 +45,13 @@ resource "aws_iam_policy" "lambda" {
         {
             "Effect": "Allow",
             "Action": [
+                "glue:*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
                 "elasticmapreduce:*"
             ],
             "Resource": "*"
