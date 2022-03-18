@@ -38,4 +38,4 @@ resource "aws_glue_crawler" "rais_glue_crawler" {
   }
 }
 EOF
-}
+} 
