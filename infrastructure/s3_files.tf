@@ -1,15 +1,13 @@
 resource "aws_s3_bucket_object" "raw_data" {
     bucket = aws_s3_bucket.dl.id
     key    = "/raw-data/rais/"
-    acl    = "private"
-    source = "null"
+    content_type = "application/x-directory"
 }
 
 resource "aws_s3_bucket_object" "staging" {
     bucket = aws_s3_bucket.dl.id
     key    = "/staging/rais/"
-    acl    = "private"
-    source = "null"
+    content_type = "application/x-directory"
 }
 
 resource "aws_s3_bucket_object" "rais_ingestion" {
