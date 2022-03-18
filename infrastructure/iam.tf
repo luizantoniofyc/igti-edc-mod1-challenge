@@ -71,3 +71,48 @@ resource "aws_iam_role_policy_attachment" "lambda_attach" {
   role       = aws_iam_role.lambda.name
   policy_arn = aws_iam_policy.lambda.arn
 }
+
+resource "aws_iam_role" "glue" {
+  name = "IGTIGlueRole"
+
+  assume_role_policy = <<EOF
+{
+"Version": "2012-10-17",
+"Statement": [
+    {
+    "Action": "sts:AssumeRole",
+    "Principal": {
+        "Service": "glue.amazonaws.com"
+    },
+    "Effect": "Allow",
+    "Sid": "AssumeRole"
+    }
+]
+}
+EOF
+}
+
+resource "aws_iam_policy" "glue" {
+  name        = "IGTIAWSGlueBasicExecutionRolePolicy"
+  path        = "/"
+  description = "Provides write permissions to Glue"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "glue:*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "glue_attach" {
+  role       = aws_iam_role.glue.name
+  policy_arn = aws_iam_policy.glue.arn
+}
