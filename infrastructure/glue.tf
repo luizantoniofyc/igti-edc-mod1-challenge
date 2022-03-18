@@ -1,6 +1,6 @@
 resource "aws_glue_job" "glue_job_rais" {
   name = "glue-job-rais"
-  role_arn = aws_iam_role.lambda.arn
+  role_arn = aws_iam_role.glue.arn
 
   command {
     script_location = "s3://${aws_s3_bucket_object.rais_transformation.key}"
@@ -19,7 +19,7 @@ resource "aws_glue_catalog_table" "rais_catalog_table" {
 resource "aws_glue_crawler" "rais_glue_crawler" {
   database_name = aws_glue_catalog_database.rais_catalog_database.name
   name = "rais-glue-crawler"
-  role = aws_iam_role.lambda.arn
+  role = aws_iam_role.glue.arn
 
   catalog_target {
     database_name = aws_glue_catalog_database.rais_catalog_database.name
