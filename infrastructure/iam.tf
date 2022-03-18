@@ -92,10 +92,11 @@ resource "aws_iam_role" "glue" {
 EOF
 }
 
-resource "aws_iam_policy" "glue" {
-  name        = "IGTIAWSGlueBasicExecutionRolePolicy"
+resource "aws_iam_policy" "glue_policy" {
+  name        = "IGTIAWSGlueServiceRole"
   path        = "/"
-  description = "Provides write permissions to Glue"
+  description = "Policy for AWS Glue service role which allows access to related services including EC2, S3, and Cloudwatch Logs"
+
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -103,9 +104,77 @@ resource "aws_iam_policy" "glue" {
         {
             "Effect": "Allow",
             "Action": [
-                "glue:*"
+                "glue:*",
+                "s3:GetBucketLocation",
+                "s3:ListBucket",
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketAcl",
+                "ec2:DescribeVpcEndpoints",
+                "ec2:DescribeRouteTables",
+                "ec2:CreateNetworkInterface",
+                "ec2:DeleteNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcAttribute",
+                "iam:ListRolePolicies",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "cloudwatch:PutMetricData"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::aws-glue-*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:/aws-glue/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateTags",
+                "ec2:DeleteTags"
+            ],
+            "Condition": {
+                "ForAllValues:StringEquals": {
+                    "aws:TagKeys": [
+                        "aws-glue-service-resource"
+                    ]
+                }
+            },
+            "Resource": [
+                "arn:aws:ec2:*:*:network-interface/*",
+                "arn:aws:ec2:*:*:security-group/*",
+                "arn:aws:ec2:*:*:instance/*"
+            ]
         }
     ]
 }
@@ -114,5 +183,5 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "glue_attach" {
   role       = aws_iam_role.glue.name
-  policy_arn = aws_iam_policy.glue.arn
+  policy_arn = aws_iam_policy.glue_policy
 }

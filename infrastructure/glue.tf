@@ -11,20 +11,24 @@ resource "aws_glue_catalog_database" "rais_catalog_database" {
   name = "rais-catalog-database"
 }
 
-resource "aws_glue_catalog_table" "rais_catalog_table" {
-  name = "rais"
-  database_name = aws_glue_catalog_database.rais_catalog_database.name
-}
+# resource "aws_glue_catalog_table" "rais_catalog_table" {
+#   name = "rais"
+#   database_name = aws_glue_catalog_database.rais_catalog_database.name
+# }
 
 resource "aws_glue_crawler" "rais_glue_crawler" {
   database_name = aws_glue_catalog_database.rais_catalog_database.name
   name = "rais-glue-crawler"
   role = aws_iam_role.glue.arn
 
-  catalog_target {
-    database_name = aws_glue_catalog_database.rais_catalog_database.name
-    tables = [aws_glue_catalog_table.rais_catalog_table.name]
+  s3_target {
+    path = "s3://${aws_s3_bucket_object.staging.key}/"
   }
+
+#   catalog_target {
+#     database_name = aws_glue_catalog_database.rais_catalog_database.name
+#     tables = [aws_glue_catalog_table.rais_catalog_table.name]
+#   }
 
   schema_change_policy {
     delete_behavior = "LOG"
