@@ -1,4 +1,6 @@
 *.csv
+*.txt
+*.7z
 .DS_Store
 .terraform/
 .terraform.lock.hcl

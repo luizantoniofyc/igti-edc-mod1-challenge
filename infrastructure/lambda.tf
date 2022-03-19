@@ -1,4 +1,4 @@
-resource "aws_lambda_function" "emr_execute" {
+resource "aws_lambda_function" "glue_execute" {
   filename      = "lambda_function_payload.zip"
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda.arn
