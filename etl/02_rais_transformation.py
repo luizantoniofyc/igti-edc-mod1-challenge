@@ -128,6 +128,6 @@ logger.info("Writing rais data as parquet...")
     .write
     .mode("overwrite")
     .format("parquet")
-    .partitionBy('ano', 'uf')
+    .partitionBy('uf')
     .save("s3://datalake-luizantoniolima-igti-challenge/staging/rais")
 )

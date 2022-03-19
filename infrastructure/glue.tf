@@ -17,7 +17,7 @@ resource "aws_glue_crawler" "rais_glue_crawler" {
   role = aws_iam_role.glue.arn
 
   s3_target {
-    path = "s3://${aws_s3_bucket.dl.id}/${aws_s3_bucket_object.staging.key}/"
+    path = "s3://${aws_s3_bucket.dl.id}" + "${aws_s3_bucket_object.staging.key}"
   }
 
   schema_change_policy {
